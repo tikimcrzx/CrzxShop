@@ -1,3 +1,5 @@
+import { IType } from './../shared/models/productType';
+import { IBrand } from './../shared/models/brand';
 import { ShopService } from './shop.service';
 import { Component, OnInit } from '@angular/core';
 import { IProduct } from '../shared/models/product';
@@ -9,14 +11,35 @@ import { IProduct } from '../shared/models/product';
 })
 export class ShopComponent implements OnInit {
   products: IProduct[];
+  brands: IBrand[];
+  types: IType[];
 
   constructor(private shopService: ShopService) {}
 
   ngOnInit(): void {
-    this.shopService.getProducts().subscribe((response) => {
-      this.products = response.data;
-    }, error => {
-      console.log(error);
+    this.getProducts();
+    this.getBrands();
+    this.getTypes();
+  }
+
+  getProducts() {
+    this.shopService.getProducts().subscribe({
+      next: (response) => (this.products = response.data),
+      error: (e) => console.log(e),
+    });
+  }
+
+  getBrands() {
+    this.shopService.getBrands().subscribe({
+      next: (response) => (this.brands = response),
+      error: (e) => console.log(e),
+    });
+  }
+
+  getTypes() {
+    this.shopService.getTypes().subscribe({
+      next: (response) => (this.types = response),
+      error: (e) => console.log(e),
     });
   }
 }
