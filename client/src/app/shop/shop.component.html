@@ -2,10 +2,13 @@
   <div class="row">
     <section class="col-3">
       <h5 class="text-warning ml-3">Sort</h5>
-      <select class="custom-select mb-3">
-        <option>Alphabetical</option>
-        <option>Price: Low tho High</option>
-        <option>Price: High tho Low</option>
+      <select
+        class="custom-select mb-3"
+        (change)="onSortSelected($event.target.value)"
+      >
+        <option *ngFor="let sort of sortOptions" [value]="sort.value">
+          {{ sort.name }}
+        </option>
       </select>
 
       <h5 class="text-warning ml-3">Brands</h5>
@@ -13,7 +16,7 @@
         <li
           class="list-group-item"
           *ngFor="let brand of brands"
-          [class.active]="brand.id === this.brandIdSelected"
+          [class.active]="brand.id === this.shopParamas.brandId"
           [value]="brand.id"
           (click)="onBrandSelected(brand.id)"
         >
@@ -25,7 +28,7 @@
         <li
           class="list-group-item"
           *ngFor="let type of types"
-          [class.active]="type.id === this.typeIdSelected"
+          [class.active]="type.id === this.shopParamas.typeId"
           [value]="type.id"
           (click)="onTypeSelected(type.id)"
         >
@@ -35,11 +38,11 @@
     </section>
     <section class="col-9">
       <div class="d-flex justify-content-between align-items-center pb-2">
-        <header>
-          <span
-            >Showing <strong>10</strong> of <strong>16</strong> Results</span
-          >
-        </header>
+        <app-paging-header
+          [totalCount]="this.totalCount"
+          [pageSize]="this.shopParamas.pageSize"
+          [pageNumber]="this.shopParamas.pageNumber"
+        ></app-paging-header>
         <div class="form-inline mt-2">
           <input
             class="form-control mr-2"
@@ -56,6 +59,13 @@
         <div class="col-4 mb-4" *ngFor="let product of products">
           <app-product-item [product]="product"></app-product-item>
         </div>
+      </div>
+      <div class="d-flex justify-content-center" *ngIf="totalCount > 0">
+        <app-pager
+          [pageSize]="shopParamas.pageSize"
+          [totalCount]="totalCount"
+          (pageChanged)="onPageChanged($event)"
+        ></app-pager>
       </div>
     </section>
   </div>
